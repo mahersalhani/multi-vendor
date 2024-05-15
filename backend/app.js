@@ -5,25 +5,28 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-app.use(cors({
-  origin: ['https://eshop-tutorial-pyri.vercel.app',],
-  credentials: true
-}));
-
-app.use(express.json());
-app.use(cookieParser());
-app.use("/test", (req, res) => {
-  res.send("Hello world!");
-});
-
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-
 // config
 if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({
     path: "config/.env",
   });
 }
+
+app.use(
+  cors({
+    // origin: ['https://eshop-tutorial-pyri.vercel.app',],
+    origin: [process.env.FRONTEND_URL],
+    credentials: true,
+  })
+);
+
+app.use(express.json({ limit: "50mb" }));
+app.use(cookieParser());
+app.use("/test", (req, res) => {
+  res.send("Hello world!");
+});
+
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 // import routes
 const user = require("./controller/user");
